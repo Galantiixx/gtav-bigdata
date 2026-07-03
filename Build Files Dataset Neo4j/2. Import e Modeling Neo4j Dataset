@@ -1,0 +1,32 @@
+LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/Galantiixx/gtav-bigdata/main/dataset/gtav_dataset_analytics_2013to2026.csv' AS row
+
+// Criar Entidades (Nós) e assegurar a unicidade
+MERGE (c:Country {name: row.country})
+SET c.region = row.region, c.isoCode = row.iso3_code
+
+MERGE (p:Platform {name: row.platform})
+SET p.generation = row.platform_generation
+
+MERGE (y:Year {value: toInteger(row.year)})
+
+WITH c, p, y, row
+
+// Criar Relações de Vendas (Físico vs Digital) com conversão de tipos
+CREATE (c)-[s:HAD_SALES {
+    grossRevenue: toFloat(row.gross_revenue_usd),
+    unitsSold: toInteger(row.units_sold),
+    digitalPct: toFloat(row.digital_sales_percentage),
+    physicalPct: toFloat(row.physical_sales_percentage)
+}]->(p)
+
+// Criar Relações de Engajamento e Receita Extra com conversão de tipos
+CREATE (c)-[e:ENGAGED_IN {
+    activePlayers: toInteger(row.estimated_active_players),
+    gtaOnlinePlayers: toInteger(row.gta_online_players),
+    sharkCardRev: toFloat(row.shark_card_revenue_usd),
+    dlcRevenue: toFloat(row.dlc_revenue_usd),
+    rating: toFloat(row.customer_rating)
+}]->(y)
+
+// Estabelecer a relação temporal da plataforma
+MERGE (p)-[:PERFORMED_IN]->(y);

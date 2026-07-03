@@ -1,0 +1,8 @@
+MATCH (c:Country)-[e:ENGAGED_IN]->(y:Year)
+RETURN c.name AS Pais, 
+       c.region AS Regiao,
+       sum(e.sharkCardRev) AS Total_SharkCards_USD, 
+       sum(e.dlcRevenue) AS Total_DLC_USD,
+       avg(e.activePlayers) AS Media_Jogadores_Ativos
+ORDER BY Total_SharkCards_USD DESC
+LIMIT 5;

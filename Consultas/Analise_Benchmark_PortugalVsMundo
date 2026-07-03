@@ -1,0 +1,13 @@
+MATCH (c:Country)-[s:HAD_SALES]->(p:Platform)
+WITH CASE 
+        WHEN c.name = 'Portugal' THEN 'Portugal' 
+        ELSE 'Média Global' 
+     END AS Mercado,
+     p.generation AS Geracao_Consolas,
+     avg(s.digitalPct) AS Percentagem_Media_Digital,
+     avg(s.physicalPct) AS Percentagem_Media_Fisica
+RETURN Mercado, 
+       Geracao_Consolas, 
+       round(Percentagem_Media_Digital, 2) AS Digital_Pct, 
+       round(Percentagem_Media_Fisica, 2) AS Fisica_Pct
+ORDER BY Geracao_Consolas ASC, Mercado;

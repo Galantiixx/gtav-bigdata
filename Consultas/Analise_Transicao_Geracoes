@@ -1,0 +1,5 @@
+MATCH (c:Country)-[s:HAD_SALES]->(p:Platform)
+RETURN p.generation AS Geracao_Consolas,
+       avg(s.digitalPct) AS Percentagem_Media_Digital,
+       sum(s.unitsSold) AS Total_Unidades_Vendidas
+ORDER BY Geracao_Consolas ASC;

@@ -1,0 +1,10 @@
+MATCH (c1:Country)-[s1:HAD_SALES]->(p:Platform)<-[s2:HAD_SALES]-(c2:Country)
+WHERE s1.digitalPct > 60.0 AND s2.digitalPct > 60.0 
+  AND c1.name = 'Brazil' 
+  AND c1 <> c2
+RETURN c1.name AS Mercado_Alvo, 
+       c2.name AS Mercado_Semelhante, 
+       collect(p.name) AS Plataformas_em_Comum, 
+       count(p) AS Forca_da_Relacao
+ORDER BY Forca_da_Relacao DESC
+LIMIT 5;
